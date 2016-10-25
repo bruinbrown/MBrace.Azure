@@ -29,6 +29,8 @@ type ClusterId =
         /// Service Bus hostname.
         ServiceBusAccount : AzureServiceBusAccount
 
+        SecondaryStorageAccounts : (string * AzureStorageAccount) list
+
         /// Service Bus Queue.
         WorkItemQueue : string
         /// Service Bus Topic.
@@ -149,11 +151,15 @@ type ClusterId =
             sprintf "%s%s" text
                 (if configuration.UseSuffixId then sprintf "s%05d" configuration.SuffixId else "")
 
+        let storageAccount () = AzureStorageAccount.FromConnectionString configuration.StorageConnectionString
+
+        let secondaryStorageAccounts = configuration.SecondaryStorageAccounts
+
         {
             Version                         = version.ToString(4)
-            StorageAccount                  = AzureStorageAccount.FromConnectionString configuration.StorageConnectionString
+            StorageAccount                  = storageAccount()
             ServiceBusAccount               = AzureServiceBusAccount.FromConnectionString configuration.ServiceBusConnectionString
-
+            SecondaryStorageAccounts        = secondaryStorageAccounts
             WorkItemQueue                   = appendVersionAndSuffixId configuration.WorkItemQueue
             WorkItemTopic                   = appendVersionAndSuffixId configuration.WorkItemTopic
 

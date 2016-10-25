@@ -1,0 +1,1 @@
+nuget MBrace.Core -> git file:///E:\work\MBrace.Core filestores build:"build.cmd NuGet", Packages: /bin/

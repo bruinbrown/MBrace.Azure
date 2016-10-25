@@ -122,6 +122,8 @@ type ClusterManager =
 
         logger.LogInfof "Creating MBrace storage primitives"
         let fileStore = BlobStore.Create(clusterId.StorageAccount, defaultContainer = clusterId.UserDataContainer)
+        let secondaryStores = configuration.SecondaryStorageAccounts |> List.map (fun (a,b) -> a, BlobStore.Create(b) :> ICloudFileStore) |> dict
+        let fileStore = CloudFileStoreCollection(fileStore, secondaryStores)
         let atomProvider = TableAtomProvider.Create(clusterId.StorageAccount, defaultTable = clusterId.UserDataTable)
         let dictionaryProvider = TableDictionaryProvider.Create(clusterId.StorageAccount)
         let queueProvider = ServiceBusQueueProvider.Create(clusterId.ServiceBusAccount)

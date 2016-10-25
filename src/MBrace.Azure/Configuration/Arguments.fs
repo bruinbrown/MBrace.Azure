@@ -23,6 +23,8 @@ type private AzureArguments =
     // Connection string parameters
     | [<Mandatory>][<AltCommandLine("-s")>] Storage_Connection_String of conn:string
     | [<Mandatory>][<AltCommandLine("-b")>] Service_Bus_Connection_string of conn:string
+    // Secondary cloud stores
+    | [<AltCommandLine("-as")>] Secondary_Cloud_Store of name:string * conn:string
     // Cluster configuration parameters
     | Force_Version of version:string
     | Suffix_Id of num:uint16
@@ -55,6 +57,7 @@ type private AzureArguments =
             | Worker_Id _ -> "Specify worker name identifier."
             | Storage_Connection_String _ -> "Azure Storage connection string."
             | Service_Bus_Connection_string _ -> "Azure ServiceBus connection string."
+            | Secondary_Cloud_Store _ -> "Alternative Azure Storage connection string."
             | Optimize_Closure_Serialization _ -> "Specifies whether cluster should implement closure serialization optimizations. Defaults to true."
             | Force_Version _ -> "Forces an MBrace.Azure version number identifier. Defaults to compiled version."
             | Suffix_Id _ -> "User-supplied suffix identifier for Azure store resources. Defaults to 0."
@@ -155,6 +158,8 @@ type ArgumentConfiguration =
         let sacc = parseResult.PostProcessResult(<@ Storage_Connection_String @>, AzureStorageAccount.FromConnectionString)
         let bacc = parseResult.PostProcessResult(<@ Service_Bus_Connection_string @>, AzureServiceBusAccount.FromConnectionString)
 
+        let secondaryStores = parseResult.PostProcessResults(<@ Secondary_Cloud_Store @>, (fun (name, connStr) -> name, AzureStorageAccount.FromConnectionString(connStr)))
+
         let config = new Configuration(sacc.ConnectionString, bacc.ConnectionString)
         parseResult.IterResult(<@ Force_Version @>, fun v -> config.Version <- v)
         parseResult.IterResult(<@ Suffix_Id @>, fun id -> config.SuffixId <- id)
@@ -173,7 +178,9 @@ type ArgumentConfiguration =
         parseResult.IterResult(<@ Runtime_Table @>, fun c -> config.RuntimeTable <- c)
         parseResult.IterResult(<@ Runtime_Logs_Table @>, fun c -> config.RuntimeLogsTable <- c)
         parseResult.IterResult(<@ User_Data_Table @>, fun c -> config.UserDataTable <- c)
-
+        
+        config.SecondaryStorageAccounts <- secondaryStores |> List.ofSeq
+        
         {
             Configuration = Some config
             MaxWorkItems = maxWorkItems

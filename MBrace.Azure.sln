@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{8C962C9C-7DF5-430C-8CD4-7C2642F68409}"
 	ProjectSection(SolutionItems) = preProject
@@ -56,6 +56,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WorkerRole", "WorkerRole", "{6EE518A6-354B-4FA0-B9D4-08F41CA65960}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MBrace.Azure.StandaloneClient", "samples\MBrace.Azure.StandaloneClient\MBrace.Azure.StandaloneClient.fsproj", "{C1F585DB-92AA-4CF2-AB64-CF1857A5B672}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1EDF7AFF-8783-4DD2-A3B5-BBBF7D0CCEE8}"
+	ProjectSection(SolutionItems) = preProject
+		paket.local = paket.local
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

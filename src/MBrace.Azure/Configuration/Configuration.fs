@@ -70,6 +70,8 @@ type Configuration(storageConnectionString : string, serviceBusConnectionString 
     /// Specifies wether the cluster should optimize closure serialization. Defaults to true.
     member val OptimizeClosureSerialization = true with get, set
 
+    member val SecondaryStorageAccounts : (string * AzureStorageAccount) list = [] with get, set
+
     // #region Credentials
 
     /// Azure Storage account name
@@ -86,7 +88,6 @@ type Configuration(storageConnectionString : string, serviceBusConnectionString 
     member __.ServiceBusConnectionString
         with get () = serviceBusConnectionString
         and set sbcs = parseServiceBus sbcs
-
 
     // #region Service Bus
 
